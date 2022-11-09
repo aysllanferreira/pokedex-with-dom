@@ -20,20 +20,20 @@ const checkButton = async () => {
   else getNextBtn.disabled = false;
 };
 
+const renderNewPokemons = async (param) => {
+  const res = await fetchApi(param);
+  renderPokemon(res, getDiv);
+  await checkButton();
+};
+
 const handlePrev = () => {
   getPrevBtn.addEventListener('click', async () => {
     const dataClick = await fetchPrevNext(url);
     const { previous } = dataClick;
+    url = previous;
+    getDiv.innerHTML = '';
 
-    if (previous === null) getPrevBtn.disabled = true;
-    else {
-      getPrevBtn.disabled = false;
-      url = previous;
-      getDiv.innerHTML = '';
-      const res = await fetchApi(previous);
-      renderPokemon(res, getDiv);
-      await checkButton();
-    }
+    await renderNewPokemons(previous);
   });
 };
 
@@ -41,16 +41,10 @@ const handleNext = () => {
   getNextBtn.addEventListener('click', async () => {
     const dataClick = await fetchPrevNext(url);
     const { next } = dataClick;
+    url = next;
+    getDiv.innerHTML = '';
 
-    if (next === null) getNextBtn.disabled = true;
-    else {
-      getNextBtn.disabled = false;
-      url = next;
-      getDiv.innerHTML = '';
-      const res = await fetchApi(next);
-      renderPokemon(res, getDiv);
-      await checkButton();
-    }
+    await renderNewPokemons(next);
   });
 };
 
